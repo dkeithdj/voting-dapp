@@ -70,8 +70,8 @@ describe("votingdapp", () => {
 
     const smoothCandidate =
       await votingProgram.account.candidate.fetch(smoothAddress);
-
     console.log(smoothCandidate);
+    expect(smoothCandidate.candidateVotes.toNumber()).toEqual(0);
 
     const [crunchyAddress] = PublicKey.findProgramAddressSync(
       [new anchor.BN(1).toArrayLike(Buffer, "le", 8), Buffer.from("Crunchy")],
@@ -80,8 +80,21 @@ describe("votingdapp", () => {
 
     const crunchyCandidate =
       await votingProgram.account.candidate.fetch(crunchyAddress);
-
     console.log(crunchyCandidate);
+    expect(crunchyCandidate.candidateVotes.toNumber()).toEqual(0);
   });
-  it("vote", async () => {});
+
+  it("vote", async () => {
+    await votingProgram.methods.vote("Smooth", new anchor.BN(1)).rpc();
+
+    const [smoothAddress] = PublicKey.findProgramAddressSync(
+      [new anchor.BN(1).toArrayLike(Buffer, "le", 8), Buffer.from("Smooth")],
+      votingAddress,
+    );
+
+    const smoothCandidate =
+      await votingProgram.account.candidate.fetch(smoothAddress);
+    console.log(smoothCandidate);
+    expect(smoothCandidate.candidateVotes.toNumber()).toEqual(1);
+  });
 });

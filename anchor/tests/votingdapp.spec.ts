@@ -8,27 +8,28 @@ import IDL from "../target/idl/votingdapp.json";
 import { BankrunProvider } from "anchor-bankrun";
 
 const votingAddress = new PublicKey(
-  "AsjZ3kWAUSQRNt2pZVeJkywhZ6gpLpHZmJjduPmKZDZZ",
+  "5fcYpazPFBRbUBexy9ncoB8gYrknBdpxpmH7JK8kAvAY",
 );
 
 describe("votingdapp", () => {
   let context;
   let provider;
-  let votingProgram: Program<Votingdapp>;
+  anchor.setProvider(anchor.AnchorProvider.env());
+  let votingProgram: Program<Votingdapp> = anchor.workspace.Votingdapp;
 
-  beforeAll(async () => {
-    context = await startAnchor(
-      "",
-      [{ name: "votingdapp", programId: votingAddress }],
-      [],
-    );
-    provider = new BankrunProvider(context);
-
-    votingProgram = new Program<Votingdapp>(
-      structuredClone(IDL) as Votingdapp,
-      provider,
-    );
-  });
+  // beforeAll(async () => {
+  //   // context = await startAnchor(
+  //   //   "",
+  //   //   [{ name: "votingdapp", programId: votingAddress }],
+  //   //   [],
+  //   // );
+  //   // provider = new BankrunProvider(context);
+  //   //
+  //   // votingProgram = new Program<Votingdapp>(
+  //   //   structuredClone(IDL) as Votingdapp,
+  //   //   provider,
+  //   // );
+  // });
 
   it("Initialize Voting", async () => {
     await votingProgram.methods
